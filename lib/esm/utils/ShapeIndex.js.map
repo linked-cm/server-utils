@@ -1,1 +1,0 @@
-{"version":3,"file":"ShapeIndex.js","sourceRoot":"","sources":["../../../src/utils/ShapeIndex.ts"],"names":[],"mappings":"AAOA,oEAAoE;AACpE,MAAM,CAAC,MAAM,UAAU,GAAiC,EAAE,CAAC;AAE3D,MAAM,UAAU,iBAAiB,CAAC,GAAW;IAC3C,OAAO,UAAU,CAAC,GAAG,CAAC,CAAC;AACzB,CAAC;AAED,MAAM,UAAU,aAAa;IAC3B,OAAO,UAAU,CAAC;AACpB,CAAC"}
