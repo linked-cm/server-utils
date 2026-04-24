@@ -8,4 +8,3 @@ yarn.lock
 # Compiled artifacts should only live in lib/, never under src/
 src/**/*.js
 src/**/*.js.map
-src/**/*.d.ts
