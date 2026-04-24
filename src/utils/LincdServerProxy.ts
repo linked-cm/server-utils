@@ -252,7 +252,13 @@ export class LincdServerProxy {
     let shapeClass = getShapeClass(shape);
     let SHACL_Shape = shapeClass.shape;
     let shapeURI = SHACL_Shape?.id;
-    let packageName = getShapePackageNameFromUri(shapeURI);
+    // Prefer the package name set by linkedPackage() on the shape constructor
+    // — this is the un-sanitized, module-resolvable form (e.g. '@_linked/server').
+    // Fall back to parsing the URI for shapes registered before this hook existed
+    // (legacy lincd-* packages whose sanitized form matches the module spec).
+    let packageName =
+      (shapeClass as any).packageName ||
+      getShapePackageNameFromUri(shapeURI);
 
     return {
       shapeClass,
