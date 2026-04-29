@@ -10,7 +10,7 @@
     "type": "git",
     "url": ""
   },
-  "version": "1.0.4",
+  "version": "1.0.5",
   "linkedPackage": true,
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
