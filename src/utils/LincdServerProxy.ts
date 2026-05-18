@@ -8,6 +8,15 @@ function getShapePackageNameFromUri(shapeURI: string) {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
+// Scoped package names like "@_linked/auth" contain "/" and must be URL-encoded
+// before they are inserted into `/call/:pkg/...` routes. Example:
+// `@_linked/auth` -> `%40_linked%2Fauth`, so
+// `/call/@_linked/auth/signinWithPassword` becomes
+// `/call/%40_linked%2Fauth/signinWithPassword` and is parsed as one `:pkg` segment.
+function encodePackageNameForRoute(packageName: string) {
+  return encodeURIComponent(packageName);
+}
+
 export interface CallConfig {
   method: string;
   headers?: any;
@@ -132,10 +141,11 @@ export class LincdServerProxy {
     headers?
   ): Promise<any> {
     let { shapeClass, packageName, shapeURI } = this.parseShape(shape);
+    const encodedPackageName = encodePackageNameForRoute(packageName);
 
     //NOTE: custom calls are not going straight to the localServer on nodejs, so that request.body is available.
     return fetch(
-      `${this.rootUrl}/call/${packageName}/${shapeClass.name}/${methodName}?shapeURI=${shapeURI}`,
+      `${this.rootUrl}/call/${encodedPackageName}/${shapeClass.name}/${methodName}?shapeURI=${shapeURI}`,
       {
         method: method,
         headers: headers || {}, //NOTE: custom shape methods do not use LincdServerProxy.defaultHeaders,
@@ -181,14 +191,15 @@ export class LincdServerProxy {
     ) {
       //then call the server directly
       return this.localServer.callBackendMethod(packageName, method, args);
-    } else {
-      let body = JSON.stringify({ args });
-      let root = this.rootUrl;
-      return this.fetchBackend(
-        `${root}/call/${packageName}/${method}`,
-        body,
-        headers,
-        setLoaded,
+      } else {
+        let body = JSON.stringify({ args });
+        let root = this.rootUrl;
+        const encodedPackageName = encodePackageNameForRoute(packageName);
+        return this.fetchBackend(
+          `${root}/call/${encodedPackageName}/${method}`,
+          body,
+          headers,
+          setLoaded,
         overwriteData
       );
     }
@@ -216,6 +227,7 @@ export class LincdServerProxy {
       this.parseMethod(methodOrConfig);
 
     let { shapeClass, shapeURI, packageName } = this.parseShape(shape);
+    const encodedPackageName = encodePackageNameForRoute(packageName);
     const instanceNode = getInstanceNode(shape);
 
     if (
@@ -240,7 +252,7 @@ export class LincdServerProxy {
     });
     let root = this.rootUrl;
     return this.fetchBackend(
-      `${root}/call/${packageName}/${shapeClass.name}/${method}`,
+      `${root}/call/${encodedPackageName}/${shapeClass.name}/${method}`,
       body,
       headers,
       setLoaded,
