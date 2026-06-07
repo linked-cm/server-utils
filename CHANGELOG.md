@@ -1,5 +1,11 @@
 # @\_linked/server-utils
 
+## 1.0.6
+
+### Patch Changes
+
+- [#5](https://github.com/linked-cm/server-utils/pull/5) [`88cb730`](https://github.com/linked-cm/server-utils/commit/88cb730784ceffabb187d44eb3b8d3279e38aac5) Thanks [@flyon](https://github.com/flyon)! - Rebuild + republish. The 1.0.5 tarball was missing all `.js` files (only `.d.ts` shipped) because `yarn linked build` was silently failing inside CI at the dual-package step. Switch to the explicit per-step build pattern that `@_linked/cli` itself uses (`rimraf && build-esm && build-cjs && copy-to-lib && dual-package`), which fails loudly per step and produces complete `lib/esm/` + `lib/cjs/` output with their dual-package `package.json` markers.
+
 ## 1.0.5
 
 ### Patch Changes
