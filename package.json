@@ -41,7 +41,7 @@
   "license": "ISC",
   "scripts": {
     "start": "npm exec linked dev",
-    "build": "yarn linked build",
+    "build": "yarn linked build && test -d lib/esm && test -d lib/cjs",
     "dual-package": "echo 'adding package.json to each lib folder for dual output support' && yarn tsconfig-to-dual-package ./tsconfig-cjs.json ./tsconfig-esm.json",
     "compile": "echo 'compiling CJS' && tsc -p tsconfig-cjs.json && echo 'compiling ESM' && tsc -p tsconfig-esm.json",
     "copy-to-lib": "echo 'copying other files to lib folder' && yarn copyfiles -u 1 ./src/**/*.scss ./src/**/*.json ./lib/esm && yarn copyfiles -u 1 ./src/**/*.scss ./src/**/*.json ./lib/cjs",
