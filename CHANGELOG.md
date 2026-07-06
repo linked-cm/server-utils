@@ -1,5 +1,11 @@
 # @\_linked/server-utils
 
+## 1.0.7
+
+### Patch Changes
+
+- [#9](https://github.com/linked-cm/server-utils/pull/9) [`5967596`](https://github.com/linked-cm/server-utils/commit/59675969a08827982106e82c7c42e3fab517b7e6) Thanks [@flyon](https://github.com/flyon)! - Serialization: replace removed `CoreMap` with native `Map` (core dropped CoreMap in `b2de3ad`). Fixes `Cannot find module @_linked/core/collections/CoreMap` on a clean install.
+
 ## 1.0.6
 
 ### Patch Changes
