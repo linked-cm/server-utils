@@ -1,7 +1,7 @@
 /**
  * Simplified JSONParser for @_linked/core.
  *
- * Handles: Shape instances, Shape classes, Date, ShapeSet, CoreSet, CoreMap,
+ * Handles: Shape instances, Shape classes, Date, ShapeSet, CoreSet, Map,
  * plain objects/arrays, and primitives.
  *
  * All graph-model types (Graph, NamedNode, BlankNode, Literal, Quad, QuadSet,
@@ -11,7 +11,6 @@
 import { Shape } from '@_linked/core/shapes/Shape';
 import { ShapeSet } from '@_linked/core/collections/ShapeSet';
 import { CoreSet } from '@_linked/core/collections/CoreSet';
-import { CoreMap } from '@_linked/core/collections/CoreMap';
 import { getShapeClass } from '@_linked/core/utils/ShapeClass';
 
 export class JSONParser {
@@ -144,8 +143,8 @@ export class JSONParser {
   private static createCoreMap(object: {
     __type: string;
     entries: any[];
-  }): CoreMap<any, any> {
-    const map = new CoreMap<any, any>();
+  }): Map<any, any> {
+    const map = new Map<any, any>();
     for (const entry of object.entries) {
       const [key, value] = entry;
       map.set(this.parseInternal(key), this.parseInternal(value));
