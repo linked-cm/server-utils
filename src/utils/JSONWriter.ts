@@ -1,7 +1,7 @@
 /**
  * Simplified JSONWriter for @_linked/core.
  *
- * Handles: Shape instances, Shape classes, Date, ShapeSet, CoreSet, CoreMap,
+ * Handles: Shape instances, Shape classes, Date, ShapeSet, CoreSet, Map,
  * plain objects/arrays, and primitives.
  *
  * All graph-model types (Graph, NamedNode, BlankNode, Literal, Quad, QuadSet,
@@ -11,7 +11,6 @@
 import { Shape } from '@_linked/core/shapes/Shape';
 import { ShapeSet } from '@_linked/core/collections/ShapeSet';
 import { CoreSet } from '@_linked/core/collections/CoreSet';
-import { CoreMap } from '@_linked/core/collections/CoreMap';
 
 export class JSONWriter {
   /**
@@ -55,7 +54,7 @@ export class JSONWriter {
       return this.convertCoreSet(object, 'ss');
     }
 
-    if (object instanceof CoreMap) {
+    if (object instanceof Map) {
       return this.convertCoreMap(object);
     }
 
@@ -116,7 +115,7 @@ export class JSONWriter {
     return { __type: type, entries };
   }
 
-  private static convertCoreMap(map: CoreMap<any, any>): {
+  private static convertCoreMap(map: Map<any, any>): {
     __type: string;
     entries: any[];
   } {
