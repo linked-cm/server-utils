@@ -4,7 +4,50 @@ export class BackendProvider {
   public request;
   public response;
 
+  // Express router layers this provider added via `registerRoute`, tracked so
+  // `disposeRoutes()` can remove them on an HMR reload. Vite re-runs a
+  // provider's `setupBeforeControllers` on every backend source change; without
+  // removing the previously-registered middleware first, each reload STACKS
+  // another copy on the express app (duplicate cookie/jwt/session middleware,
+  // leaked listeners). `this.server` is the express app (LinkedServer passes it
+  // as the first constructor arg).
+  private _registeredLayers: any[] = [];
+
   constructor(public server, public lincdServer) {}
+
+  /**
+   * Register an express route/middleware AND track it for HMR disposal.
+   * `method` is any express app method (`'use' | 'get' | 'post' | ...`).
+   *   registerRoute('use', '/', cookieParser())
+   *   registerRoute('get', '/health', (req, res) => res.send('ok'))
+   * The layers express appends to its router stack are captured so
+   * `disposeRoutes()` can splice them back out on reload.
+   */
+  protected registerRoute(method: string, path: string, ...handlers): void {
+    const app = this.server;
+    const router = app && (app._router ?? app.router);
+    const before = router ? router.stack.length : 0;
+    app[method](path, ...handlers);
+    const after = router ? router.stack.length : before;
+    for (let i = before; i < after; i++) {
+      this._registeredLayers.push(router.stack[i]);
+    }
+  }
+
+  /**
+   * Remove every route/middleware this provider registered via
+   * `registerRoute`. Called from a provider's `dispose()` on HMR reload so
+   * middleware doesn't accumulate across reloads. Idempotent.
+   */
+  protected disposeRoutes(): void {
+    const app = this.server;
+    const router = app && (app._router ?? app.router);
+    if (router && this._registeredLayers.length) {
+      const dropped = new Set(this._registeredLayers);
+      router.stack = router.stack.filter((layer) => !dropped.has(layer));
+    }
+    this._registeredLayers = [];
+  }
 
   /**
    * Each request, all providers are given the opportunity to provide data for the request.

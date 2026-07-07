@@ -1,11 +1,12 @@
 import { Shape } from '@_linked/core/shapes/Shape';
-import {
-  ActionHandler,
-  CallConfig,
-  LincdServerProxy,
-} from './LincdServerProxy.js';
+import type { ActionHandler, CallConfig } from './LincdServerProxy.js';
+import { LincdServerProxy } from './LincdServerProxy.js';
 
-export { CallConfig } from './LincdServerProxy.js';
+// `export type` — CallConfig is an interface (type-only). A plain
+// `export { CallConfig }` is a runtime value re-export of a symbol erased at
+// compile time, so under ESM/Vite it throws "does not provide an export named
+// 'CallConfig'".
+export type { CallConfig } from './LincdServerProxy.js';
 
 let proxy = process.env.SITE_ROOT
   ? LincdServerProxy.getFromURI(process.env.SITE_ROOT)
