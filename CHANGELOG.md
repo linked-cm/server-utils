@@ -1,5 +1,13 @@
 # @\_linked/server-utils
 
+## 1.0.9
+
+### Patch Changes
+
+- [#12](https://github.com/linked-cm/server-utils/pull/12) [`ce41a57`](https://github.com/linked-cm/server-utils/commit/ce41a57f2f80ed22d0f164b89216ba14a3a48254) Thanks [@flyon](https://github.com/flyon)! - `BackendProvider` gains `registerRoute(method, path, ...handlers)` + `disposeRoutes()` — register express routes/middleware that are tracked and torn down on HMR reload (so backend source changes don't stack duplicate middleware). Used by `@_linked/auth`'s `dispose()`. Fixes `this.registerRoute is not a function` on boot.
+
+  Also: `Server.ts` re-exports `CallConfig` with `export type` (it's an interface) — fixes the runtime ESM error "does not provide an export named 'CallConfig'".
+
 ## 1.0.8
 
 ### Patch Changes
