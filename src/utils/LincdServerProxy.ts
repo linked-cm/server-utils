@@ -78,6 +78,19 @@ export class LincdServerProxy {
     this.defaultHeaders = Object.assign(this.defaultHeaders, headers);
   }
 
+  /**
+   * Remove one or more default headers previously set via {@link addDefaultHeaders}.
+   * Used by scoped request contexts (e.g. CN's DataRouting) to tear down their
+   * headers on unmount so they don't leak into subsequent calls.
+   *
+   * @param names header names to remove
+   */
+  static removeDefaultHeaders(...names: string[]) {
+    for (const name of names) {
+      delete this.defaultHeaders[name];
+    }
+  }
+
   static registerActionHandler(actionName: string, handler: ActionHandler) {
     const handlers = this.actionHandlers.get(actionName) || [];
     handlers.push(handler);
