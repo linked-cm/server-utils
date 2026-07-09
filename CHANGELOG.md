@@ -1,5 +1,11 @@
 # @\_linked/server-utils
 
+## 1.0.10
+
+### Patch Changes
+
+- [#15](https://github.com/linked-cm/server-utils/pull/15) [`66ff3b0`](https://github.com/linked-cm/server-utils/commit/66ff3b0c6284025776527700f8d782ace447aec2) Thanks [@flyon](https://github.com/flyon)! - `Server.removeDefaultHeaders(...names)` / `LincdServerProxy.removeDefaultHeaders(...names)` — remove default headers previously set via `addDefaultHeaders` (used by scoped request contexts like CN's DataRouting to tear down routing headers on unmount).
+
 ## 1.0.9
 
 ### Patch Changes
