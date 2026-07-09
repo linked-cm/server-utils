@@ -42,6 +42,14 @@ export class Server {
   }
 
   /**
+   * Remove one or more default headers previously set via {@link addDefaultHeaders}.
+   * @param names header names to remove
+   */
+  static removeDefaultHeaders(...names: string[]) {
+    LincdServerProxy.removeDefaultHeaders(...names);
+  }
+
+  /**
    * Register a handler for a response action.
    * Response actions are triggered by the server by returning a json response with a key of `LincdServerProxy.RESPONSE_ACTION_KEY` and a value of the action name.
    * They allow custom actions like redirects, alerts, and other UI changes to be triggered by the server.
