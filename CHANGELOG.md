@@ -1,5 +1,12 @@
 # @\_linked/server-utils
 
+## 1.1.0
+
+### Minor Changes
+
+- [#17](https://github.com/linked-cm/server-utils/pull/17) [`41db1b2`](https://github.com/linked-cm/server-utils/commit/41db1b20d5e17e313359db9d06edb21762ca53bb) Thanks [@flyon](https://github.com/flyon)! - - `Server.call` now retries transient failures (connection-level rejections and 502/503/504) with exponential backoff, so a dropped socket / gateway blip under load no longer fails the request hard. 4xx and plain 500 are not retried (the server already processed the request).
+  - Published **ESM-only** (dropped the CJS build). No CJS `require` consumers remained; this matches the rest of the `@_linked/*` fleet and lets the build resolve `@_linked/core`'s `exports` map.
+
 ## 1.0.10
 
 ### Patch Changes
