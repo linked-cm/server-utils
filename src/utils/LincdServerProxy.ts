@@ -281,6 +281,38 @@ export class LincdServerProxy {
     };
   }
 
+  /**
+   * `fetch` with retry-on-transient-failure. Retries ONLY connection-level
+   * rejections and 502/503/504 (a dropped socket / gateway blip under load) with
+   * exponential backoff — never 4xx or a plain 500 (the server processed the
+   * request, so retrying a write could double-apply it). RDF writes here are
+   * largely idempotent; exactly-once retry of writes needs idempotency keys —
+   * see docs/backlog/032. Only the fetch is wrapped; response handling is
+   * unchanged.
+   */
+  private async fetchWithRetry(
+    url,
+    init,
+    retries: number = 2
+  ): Promise<Response> {
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const res = await fetch(url, init);
+        if (
+          res.ok ||
+          ![502, 503, 504].includes(res.status) ||
+          attempt >= retries
+        ) {
+          return res;
+        }
+      } catch (err) {
+        if (attempt >= retries) throw err;
+      }
+      // exponential backoff: 300ms, 900ms
+      await new Promise((r) => setTimeout(r, 300 * Math.pow(3, attempt)));
+    }
+  }
+
   private async fetchBackend(
     url,
     body,
@@ -288,7 +320,7 @@ export class LincdServerProxy {
     setLoaded: boolean = false,
     overwriteData: boolean = false
   ) {
-    return fetch(url, {
+    return this.fetchWithRetry(url, {
       method: 'POST',
       headers: Object.assign(
         {},
