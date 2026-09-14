@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/linked-cm/server-utils.git"
   },
   "version": "1.1.1",
   "linkedPackage": true,
